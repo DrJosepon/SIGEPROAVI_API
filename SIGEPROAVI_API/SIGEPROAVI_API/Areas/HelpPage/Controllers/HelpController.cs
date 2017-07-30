@@ -1,8 +1,8 @@
+using SIGEPROAVI_API.Areas.HelpPage.ModelDescriptions;
+using SIGEPROAVI_API.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using SIGEPROAVI_API.Areas.HelpPage.ModelDescriptions;
-using SIGEPROAVI_API.Areas.HelpPage.Models;
 
 namespace SIGEPROAVI_API.Areas.HelpPage.Controllers
 {

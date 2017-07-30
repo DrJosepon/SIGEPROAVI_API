@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AutoMapper;
+using SIGEPROAVI_API.DTO;
+using SIGEPROAVI_API.Models;
+using System;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using SIGEPROAVI_API.Models;
-using SIGEPROAVI_API.DTO;
-using AutoMapper;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace SIGEPROAVI_API.Controllers
 {
