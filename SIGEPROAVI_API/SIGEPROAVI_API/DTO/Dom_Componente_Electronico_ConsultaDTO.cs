@@ -12,5 +12,7 @@
         public string DescripcionTipoComponenteElectronico { get; set; }
         public string DescripcionServicio { get; set; }
         public string DescripcionTipoServicio { get; set; }
+
+        public bool Estado { get; set; }
     }
 }

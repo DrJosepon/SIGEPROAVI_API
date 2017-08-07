@@ -2,10 +2,12 @@
 using SIGEPROAVI_API.DTO;
 using SIGEPROAVI_API.Models;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,10 +38,11 @@ namespace SIGEPROAVI_API.Controllers
                                DescripcionTipoUsuario = TU.Descripcion,
                                IdSegUsuario = U.IdSegUsuario,
                                Nombres = U.Nombres,
-                               Usuario = U.Usuario
+                               Usuario = U.Usuario,
+                               Estado = U.Estado,
                            };
 
-            return consulta;
+            return consulta.OrderByDescending(U => U.Estado);
         }
 
         // GET: api/Seg_Usuario/5
@@ -67,7 +70,8 @@ namespace SIGEPROAVI_API.Controllers
                                DescripcionTipoUsuario = TU.Descripcion,
                                IdSegUsuario = U.IdSegUsuario,
                                Nombres = U.Nombres,
-                               Usuario = U.Usuario
+                               Usuario = U.Usuario,
+                               Estado = U.Estado
                            };
 
             return consulta;
@@ -90,7 +94,7 @@ namespace SIGEPROAVI_API.Controllers
             }
 
             Seg_Usuario seg_Usuario = await db.Seg_Usuario.FindAsync(id);
-            seg_Usuario.Estado = seg_UsuarioM.Estado;
+            //seg_Usuario.Estado = seg_UsuarioM.Estado;
             seg_Usuario.FechaModificacion = DateTime.Now;
             seg_Usuario.Nombres = seg_UsuarioM.Nombres;
             seg_Usuario.ApellidoMaterno = seg_UsuarioM.ApellidoMaterno;
@@ -129,6 +133,42 @@ namespace SIGEPROAVI_API.Controllers
             return Ok(GetSeg_Usuario());
         }
 
+        [HttpPut]
+        [Route("api/Seg_Usuario/Desactivar")]
+        //[ResponseType(typeof(Dom_Componente_ElectronicoConsultaDTO))]
+        public async Task<IHttpActionResult> DesactivarUsuario(Seg_Usuario_ModificacionDTO seg_UsuarioM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Seg_Usuario seg_Usuario = await db.Seg_Usuario.FindAsync(seg_UsuarioM.IdSegUsuario);
+            seg_Usuario.Estado = false;
+            seg_Usuario.FechaModificacion = DateTime.Now;
+            seg_Usuario.UsuarioModificador = seg_UsuarioM.UsuarioModificador;
+
+            db.Entry(seg_Usuario).State = EntityState.Modified;
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!Seg_UsuarioExists(seg_UsuarioM.IdSegUsuario))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok(GetSeg_Usuario());
+        }
+
         // POST: api/Seg_Usuario
         [ResponseType(typeof(Seg_Usuario))]
         //public async Task<IHttpActionResult> PostSeg_Usuario(Seg_Usuario seg_Usuario)
@@ -147,6 +187,16 @@ namespace SIGEPROAVI_API.Controllers
         //}
         public async Task<IHttpActionResult> PostSeg_Usuario(Seg_Usuario_InsercionDTO seg_UsuarioI)
         {
+            List<Seg_Usuario> usuarios = db.Seg_Usuario.Where(X => X.Estado == true).ToList();
+
+            foreach (Seg_Usuario usuario in usuarios)
+            {
+                if (usuario.Usuario != seg_UsuarioI.Usuario)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Ya existe un usuario activo con este nombre de usuario.");
+                }
+            }
+
             Mapper.Initialize(cfg => cfg.CreateMap<Seg_Usuario_InsercionDTO, Seg_Usuario>());
 
             Seg_Usuario seg_Usuario = Mapper.Map<Seg_Usuario>(seg_UsuarioI);

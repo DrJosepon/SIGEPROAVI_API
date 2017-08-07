@@ -10,5 +10,6 @@
         public string Clave { get; set; }
         public int IdSegTipoUsuario { get; set; }
         public string DescripcionTipoUsuario { get; set; }
+        public bool Estado { get; set; }
     }
 }
