@@ -222,11 +222,14 @@
     <Compile Include="DTO\Dom_Control_Componente_Electronico_InsercionDTO.cs" />
     <Compile Include="DTO\Dom_Tipo_Componente_Electronico_ConsultaDTO.cs" />
     <Compile Include="DTO\Dom_Tipo_Control_Componente_Electronico_ConsultaDTO.cs" />
+    <Compile Include="DTO\Gpr_Costo_Servicio_ConsultaDTO.cs" />
+    <Compile Include="DTO\Gpr_Costo_Servicio_EdicionDTO.cs" />
     <Compile Include="DTO\Gpr_Estado_Ave_ConsultaDTO.cs" />
     <Compile Include="DTO\Gpr_Estado_Ave_EdicionDTO.cs" />
     <Compile Include="DTO\Gpr_Galpon_ConsultaDTO.cs" />
     <Compile Include="DTO\Gpr_Galpon_InsercionDTO.cs" />
     <Compile Include="DTO\Gpr_Galpon_ModificacionDTO.cs" />
+    <Compile Include="DTO\Gpr_Gasto_Diario_ConsultaDTO.cs" />
     <Compile Include="DTO\Gpr_Medicion_Diaria_ConsultaDTO.cs" />
     <Compile Include="DTO\Gpr_Medicion_Diaria_InsercionDTO.cs" />
     <Compile Include="DTO\Gpr_Medicion_Horaria_ConsultaDTO.cs" />

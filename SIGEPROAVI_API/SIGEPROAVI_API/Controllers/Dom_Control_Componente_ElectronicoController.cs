@@ -25,7 +25,7 @@ namespace SIGEPROAVI_API.Controllers
         }
 
         [HttpGet]
-        [Route("api/Dom_Control_Componente_Electronico_ConsultaDTO/ComponenteElectronico/{idComponenteElectronico}")]
+        [Route("api/Dom_Control_Componente_Electronico/ComponenteElectronico/{idComponenteElectronico}")]
         //[ResponseType(typeof(Dom_Componente_ElectronicoConsultaDTO))]
         public IQueryable<Dom_Control_Componente_Electronico_ConsultaDTO> BuscarControlXComponente(int idComponenteElectronico)
         {

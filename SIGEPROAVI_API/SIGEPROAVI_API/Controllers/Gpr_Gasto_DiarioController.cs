@@ -1,4 +1,6 @@
-﻿using SIGEPROAVI_API.Models;
+﻿using SIGEPROAVI_API.DTO;
+using SIGEPROAVI_API.Models;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -30,6 +32,30 @@ namespace SIGEPROAVI_API.Controllers
             }
 
             return Ok(gpr_Gasto_Diario);
+        }
+
+        [HttpGet]
+        [Route("api/Gpr_Gasto_Diario/Temporada/{idTemporada}")]
+        public IQueryable<Gpr_Gasto_Diario_ConsultaDTO> BuscarGastoDiarioXTemporada(int idTemporada)
+        {
+            Gpr_Temporada temporada = db.Gpr_Temporada.Where(T => T.IdGprTemporada == idTemporada).FirstOrDefault();
+
+            if (temporada.FechaFin == null)
+            {
+                temporada.FechaFin = DateTime.Now;
+            }
+
+            var consulta = from MD in db.Gpr_Medicion_Diaria.Where(MD => MD.IdGprGalpon == temporada.IdGprGalpon && (MD.Fecha >= temporada.FechaInicio && MD.Fecha <= temporada.FechaFin))
+                           from GD in db.Gpr_Gasto_Diario.Where(GD => GD.IdGprMedicionDiaria == MD.IdGprMedicionDiaria)
+                           select new Gpr_Gasto_Diario_ConsultaDTO
+                           {
+                               Fecha = MD.Fecha,
+                               Gasto = GD.Gasto,
+                               IdGprGastoDiario = GD.IdGprGastoDiario,
+                               IdGprServicio = MD.IdGprServicio,
+                           };
+
+            return consulta;
         }
 
         // PUT: api/Gpr_Gasto_Diario/5
