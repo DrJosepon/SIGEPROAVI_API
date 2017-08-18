@@ -143,6 +143,23 @@ namespace SIGEPROAVI_API.Controllers
                 {
                     return Content(HttpStatusCode.BadRequest, "Todos los controles deben ser del mismo tipo.");
                 }
+
+                //HORA
+                if (control.IdDomTipoControlComponenteElectronico == 3)
+                {
+                    if ((Convert.ToDateTime(control.Inicio) <= Convert.ToDateTime(dom_Control_Componente_ElectronicoI.Inicio) && Convert.ToDateTime(control.Fin) > Convert.ToDateTime(dom_Control_Componente_ElectronicoI.Inicio)) || (Convert.ToDateTime(control.Inicio) < Convert.ToDateTime(dom_Control_Componente_ElectronicoI.Fin) && Convert.ToDateTime(control.Fin) >= Convert.ToDateTime(dom_Control_Componente_ElectronicoI.Fin)))
+                    {
+                        return Content(HttpStatusCode.BadRequest, "No pueden haber cruces de horario.");
+                    }
+                }
+                //RESTO
+                else if (control.IdDomTipoControlComponenteElectronico == 2 || control.IdDomTipoControlComponenteElectronico == 1)
+                {
+                    if ((Double.Parse(control.Inicio) >= Double.Parse(dom_Control_Componente_ElectronicoI.Inicio) && Double.Parse(control.Fin) < Double.Parse(dom_Control_Componente_ElectronicoI.Inicio)) || (Double.Parse(control.Inicio) > Double.Parse(dom_Control_Componente_ElectronicoI.Fin) && Double.Parse(control.Fin) <= Double.Parse(dom_Control_Componente_ElectronicoI.Fin)))
+                    {
+                        return Content(HttpStatusCode.BadRequest, "No pueden haber cruces de límites.");
+                    }
+                }
             }
 
             db.Dom_Control_Componente_Electronico.Add(dom_Control_Componente_Electronico);
