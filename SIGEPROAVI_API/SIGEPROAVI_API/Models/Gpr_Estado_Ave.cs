@@ -13,8 +13,8 @@ namespace SIGEPROAVI_API.Models
         [Required]
         public int CantidadAves { get; set; }
 
-        //[Required]
-        //public DateTime Fecha { get; set; }
+        [Required]
+        public DateTime Fecha { get; set; }
 
         public int IdGprTipoEstadoAve { get; set; }
 
