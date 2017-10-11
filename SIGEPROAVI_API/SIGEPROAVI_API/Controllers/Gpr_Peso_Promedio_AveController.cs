@@ -18,12 +18,6 @@ namespace SIGEPROAVI_API.Controllers
     {
         private SIGEPROAVI_APIContext db = new SIGEPROAVI_APIContext();
 
-        // GET: api/Gpr_Peso_Promedio_Ave
-        public IQueryable<Gpr_Peso_Promedio_Ave> GetGpr_Peso_Promedio_Ave()
-        {
-            return db.Gpr_Peso_Promedio_Ave;
-        }
-
         [HttpGet]
         [Route("api/Gpr_Peso_Promedio_Ave/Temporada/{idTemporada}")]
         //[ResponseType(typeof(Dom_Componente_ElectronicoConsultaDTO))]
@@ -32,69 +26,10 @@ namespace SIGEPROAVI_API.Controllers
             return db.Gpr_Peso_Promedio_Ave.Where(X => X.IdGprTemporada == idTemporada);
         }
 
-        // GET: api/Gpr_Peso_Promedio_Ave/5
+        [HttpPost]
+        [Route("api/Gpr_Peso_Promedio_Ave")]
         [ResponseType(typeof(Gpr_Peso_Promedio_Ave))]
-        public async Task<IHttpActionResult> GetGpr_Peso_Promedio_Ave(int id)
-        {
-            Gpr_Peso_Promedio_Ave gpr_Peso_Promedio_Ave = await db.Gpr_Peso_Promedio_Ave.FindAsync(id);
-            if (gpr_Peso_Promedio_Ave == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(gpr_Peso_Promedio_Ave);
-        }
-
-        // PUT: api/Gpr_Peso_Promedio_Ave/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutGpr_Peso_Promedio_Ave(int id, Gpr_Peso_Promedio_Ave gpr_Peso_Promedio_Ave)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != gpr_Peso_Promedio_Ave.IdGprPesoPromedioAve)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(gpr_Peso_Promedio_Ave).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!Gpr_Peso_Promedio_AveExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Gpr_Peso_Promedio_Ave
-        [ResponseType(typeof(Gpr_Peso_Promedio_Ave))]
-        //public async Task<IHttpActionResult> PostGpr_Peso_Promedio_Ave(Gpr_Peso_Promedio_Ave gpr_Peso_Promedio_Ave)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    db.Gpr_Peso_Promedio_Ave.Add(gpr_Peso_Promedio_Ave);
-        //    await db.SaveChangesAsync();
-
-        //    return CreatedAtRoute("DefaultApi", new { id = gpr_Peso_Promedio_Ave.IdGprPesoPromedioAve }, gpr_Peso_Promedio_Ave);
-        //}
-        public async Task<IHttpActionResult> PostGpr_Peso_Promedio_Ave(Gpr_Peso_Promedio_Ave_InsercionDTO gpr_Peso_Promedio_AveI)
+        public async Task<IHttpActionResult> GuardarPesoPromedioAve(Gpr_Peso_Promedio_Ave_InsercionDTO gpr_Peso_Promedio_AveI)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<Gpr_Peso_Promedio_Ave_InsercionDTO, Gpr_Peso_Promedio_Ave>());
 
@@ -124,36 +59,6 @@ namespace SIGEPROAVI_API.Controllers
             await db.SaveChangesAsync();
 
             return CreatedAtRoute("DefaultApi", new { id = gpr_Peso_Promedio_Ave.IdGprPesoPromedioAve }, gpr_Peso_Promedio_Ave);
-        }
-
-        // DELETE: api/Gpr_Peso_Promedio_Ave/5
-        [ResponseType(typeof(Gpr_Peso_Promedio_Ave))]
-        public async Task<IHttpActionResult> DeleteGpr_Peso_Promedio_Ave(int id)
-        {
-            Gpr_Peso_Promedio_Ave gpr_Peso_Promedio_Ave = await db.Gpr_Peso_Promedio_Ave.FindAsync(id);
-            if (gpr_Peso_Promedio_Ave == null)
-            {
-                return NotFound();
-            }
-
-            db.Gpr_Peso_Promedio_Ave.Remove(gpr_Peso_Promedio_Ave);
-            await db.SaveChangesAsync();
-
-            return Ok(gpr_Peso_Promedio_Ave);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool Gpr_Peso_Promedio_AveExists(int id)
-        {
-            return db.Gpr_Peso_Promedio_Ave.Count(e => e.IdGprPesoPromedioAve == id) > 0;
         }
     }
 }

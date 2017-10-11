@@ -18,15 +18,15 @@ namespace SIGEPROAVI_API.Controllers
     {
         private SIGEPROAVI_APIContext db = new SIGEPROAVI_APIContext();
 
-        // GET: api/Dom_Componente_Electronico
-        public IQueryable<Dom_Componente_Electronico> GetDom_Componente_Electronico()
+        [HttpGet]
+        [Route("api/Dom_Componente_Electronico")]
+        public IQueryable<Dom_Componente_Electronico> ListarComponenteElectronico()
         {
             return db.Dom_Componente_Electronico;
         }
 
         [HttpGet]
         [Route("api/Dom_Componente_Electronico/Galpon/{idGalpon}")]
-        //[ResponseType(typeof(Dom_Componente_ElectronicoConsultaDTO))]
         public IQueryable<Dom_Componente_Electronico_ConsultaDTO> BuscarComponenteElectronicoXGalpon(int idGalpon)
         {
             var consulta = from CE in db.Dom_Componente_Electronico.Where(CE => CE.IdGprGalpon == idGalpon)
@@ -50,19 +50,9 @@ namespace SIGEPROAVI_API.Controllers
             return consulta.OrderByDescending(X => X.Estado);
         }
 
-        // GET: api/Dom_Componente_Electronico/5
-        //[ResponseType(typeof(Dom_Componente_Electronico))]
-        //public async Task<IHttpActionResult> GetDom_Componente_Electronico(int id)
-        //{
-        //    Dom_Componente_Electronico dom_Componente_Electronico = await db.Dom_Componente_Electronico.FindAsync(id);
-        //    if (dom_Componente_Electronico == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(dom_Componente_Electronico);
-        //}
-        public IQueryable<Dom_Componente_Electronico_ConsultaDTO> GetDom_Componente_Electronico(int id)
+        [HttpGet]
+        [Route("api/Dom_Componente_Electronico/{id}")]
+        public IQueryable<Dom_Componente_Electronico_ConsultaDTO> BuscarComponenteElectronicoXID(int id)
         {
             var consulta = from CE in db.Dom_Componente_Electronico.Where(CE => CE.IdDomComponenteElectronico == id)
                            from TCE in db.Dom_Tipo_Componente_Electronico.Where(TCE => TCE.IdDomTipoComponenteElectronico == CE.IdDomTipoComponenteElectronico)
@@ -85,9 +75,10 @@ namespace SIGEPROAVI_API.Controllers
             return consulta;
         }
 
-        // PUT: api/Dom_Componente_Electronico/5
+        [HttpPut]
+        [Route("api/Dom_Componente_Electronico/{id}")]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutDom_Componente_Electronico(int id, Dom_Componente_Electronico_ModificacionDTO dom_Componente_ElectronicoM)
+        public async Task<IHttpActionResult> ModificarComponenteElectronico(int id, Dom_Componente_Electronico_ModificacionDTO dom_Componente_ElectronicoM)
         {
             //var errors = ModelState.Values.SelectMany(v => v.Errors);
 
@@ -117,7 +108,7 @@ namespace SIGEPROAVI_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Dom_Componente_ElectronicoExists(id))
+                if (!VerificarComponenteElectronico(id))
                 {
                     return NotFound();
                 }
@@ -127,7 +118,6 @@ namespace SIGEPROAVI_API.Controllers
                 }
             }
 
-            //return StatusCode(HttpStatusCode.NoContent);
             return Ok(BuscarComponenteElectronicoXGalpon(dom_Componente_Electronico.IdGprGalpon));
         }
 
@@ -155,7 +145,7 @@ namespace SIGEPROAVI_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Dom_Componente_ElectronicoExists(dom_Componente_ElectronicoM.IdDomComponenteElectronico))
+                if (!VerificarComponenteElectronico(dom_Componente_ElectronicoM.IdDomComponenteElectronico))
                 {
                     return NotFound();
                 }
@@ -165,25 +155,12 @@ namespace SIGEPROAVI_API.Controllers
                 }
             }
 
-            //return StatusCode(HttpStatusCode.NoContent);
             return Ok(BuscarComponenteElectronicoXGalpon(dom_Componente_Electronico.IdGprGalpon));
         }
 
-        // POST: api/Dom_Componente_Electronico
-        //[ResponseType(typeof(Dom_Componente_Electronico))]
-        //public async Task<IHttpActionResult> PostDom_Componente_Electronico(Dom_Componente_Electronico dom_Componente_Electronico)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    db.Dom_Componente_Electronico.Add(dom_Componente_Electronico);
-        //    await db.SaveChangesAsync();
-
-        //    return CreatedAtRoute("DefaultApi", new { id = dom_Componente_Electronico.IdDomComponenteElectronico }, dom_Componente_Electronico);
-        //}
-        public async Task<IHttpActionResult> PostDom_Componente_Electronico(Dom_Componente_Electronico_InsercionDTO dom_Componente_ElectronicoI)
+        [HttpPost]
+        [Route("api/Dom_Componente_Electronico")]
+        public async Task<IHttpActionResult> GuardarComponenteElectronico(Dom_Componente_Electronico_InsercionDTO dom_Componente_ElectronicoI)
         {
             List<Dom_Componente_Electronico> componentes = db.Dom_Componente_Electronico.Where(X => X.Estado == true).ToList();
 
@@ -209,36 +186,10 @@ namespace SIGEPROAVI_API.Controllers
             db.Dom_Componente_Electronico.Add(dom_Componente_Electronico);
             await db.SaveChangesAsync();
 
-            //return CreatedAtRoute("DefaultApi", new { id = dom_Componente_Electronico.IdDomComponenteElectronico }, dom_Componente_Electronico);
-            return Ok(GetDom_Componente_Electronico(dom_Componente_Electronico.IdDomComponenteElectronico));
+            return Ok(BuscarComponenteElectronicoXID(dom_Componente_Electronico.IdDomComponenteElectronico));
         }
 
-        // DELETE: api/Dom_Componente_Electronico/5
-        [ResponseType(typeof(Dom_Componente_Electronico))]
-        public async Task<IHttpActionResult> DeleteDom_Componente_Electronico(int id)
-        {
-            Dom_Componente_Electronico dom_Componente_Electronico = await db.Dom_Componente_Electronico.FindAsync(id);
-            if (dom_Componente_Electronico == null)
-            {
-                return NotFound();
-            }
-
-            db.Dom_Componente_Electronico.Remove(dom_Componente_Electronico);
-            await db.SaveChangesAsync();
-
-            return Ok(dom_Componente_Electronico);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool Dom_Componente_ElectronicoExists(int id)
+        private bool VerificarComponenteElectronico(int id)
         {
             return db.Dom_Componente_Electronico.Count(e => e.IdDomComponenteElectronico == id) > 0;
         }

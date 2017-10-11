@@ -17,12 +17,9 @@ namespace SIGEPROAVI_API.Controllers
     {
         private SIGEPROAVI_APIContext db = new SIGEPROAVI_APIContext();
 
-        // GET: api/Gpr_Servicio
-        //public IQueryable<Gpr_Servicio> GetGpr_Servicio()
-        //{
-        //    return db.Gpr_Servicio;
-        //}
-        public IQueryable<Gpr_Servicio_ConsultaDTO> GetGpr_Servicio()
+        [HttpGet]
+        [Route("api/Gpr_Servicio")]
+        public IQueryable<Gpr_Servicio_ConsultaDTO> ListarServicio()
         {
             var consulta = from S in db.Gpr_Servicio
                            from TS in db.Gpr_Tipo_Servicio.Where(TS => TS.IdGprTipoServicio == S.IdGprTipoServicio)
@@ -40,22 +37,10 @@ namespace SIGEPROAVI_API.Controllers
             return consulta;
         }
 
-        // GET: api/Gpr_Servicio/5
-        [ResponseType(typeof(Gpr_Servicio))]
-        public async Task<IHttpActionResult> GetGpr_Servicio(int id)
-        {
-            Gpr_Servicio gpr_Servicio = await db.Gpr_Servicio.FindAsync(id);
-            if (gpr_Servicio == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(gpr_Servicio);
-        }
-
-        // PUT: api/Gpr_Servicio/5
+        [HttpPut]
+        [Route("api/Gpr_Servicio/{id}")]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutGpr_Servicio(int id, Gpr_Servicio gpr_Servicio)
+        public async Task<IHttpActionResult> ModificarServicio(int id, Gpr_Servicio gpr_Servicio)
         {
             if (!ModelState.IsValid)
             {
@@ -75,7 +60,7 @@ namespace SIGEPROAVI_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Gpr_ServicioExists(id))
+                if (!VerificarServicio(id))
                 {
                     return NotFound();
                 }
@@ -88,9 +73,10 @@ namespace SIGEPROAVI_API.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Gpr_Servicio
+        [HttpPost]
+        [Route("api/Gpr_Servicio")]
         [ResponseType(typeof(Gpr_Servicio))]
-        public async Task<IHttpActionResult> PostGpr_Servicio(Gpr_Servicio_InsercionDTO gpr_ServicioI)
+        public async Task<IHttpActionResult> GuardarServicio(Gpr_Servicio_InsercionDTO gpr_ServicioI)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<Gpr_Servicio_InsercionDTO, Gpr_Servicio>());
 
@@ -110,35 +96,10 @@ namespace SIGEPROAVI_API.Controllers
             await db.SaveChangesAsync();
 
             //return CreatedAtRoute("DefaultApi", new { id = gpr_Servicio.IdGprServicio }, gpr_Servicio);
-            return Ok(GetGpr_Servicio());
+            return Ok(ListarServicio());
         }
 
-        // DELETE: api/Gpr_Servicio/5
-        [ResponseType(typeof(Gpr_Servicio))]
-        public async Task<IHttpActionResult> DeleteGpr_Servicio(int id)
-        {
-            Gpr_Servicio gpr_Servicio = await db.Gpr_Servicio.FindAsync(id);
-            if (gpr_Servicio == null)
-            {
-                return NotFound();
-            }
-
-            db.Gpr_Servicio.Remove(gpr_Servicio);
-            await db.SaveChangesAsync();
-
-            return Ok(gpr_Servicio);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool Gpr_ServicioExists(int id)
+        private bool VerificarServicio(int id)
         {
             return db.Gpr_Servicio.Count(e => e.IdGprServicio == id) > 0;
         }

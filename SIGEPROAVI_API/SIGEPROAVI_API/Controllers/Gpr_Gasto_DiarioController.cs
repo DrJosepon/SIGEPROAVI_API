@@ -15,25 +15,6 @@ namespace SIGEPROAVI_API.Controllers
     {
         private SIGEPROAVI_APIContext db = new SIGEPROAVI_APIContext();
 
-        // GET: api/Gpr_Gasto_Diario
-        public IQueryable<Gpr_Gasto_Diario> GetGpr_Gasto_Diario()
-        {
-            return db.Gpr_Gasto_Diario;
-        }
-
-        // GET: api/Gpr_Gasto_Diario/5
-        [ResponseType(typeof(Gpr_Gasto_Diario))]
-        public async Task<IHttpActionResult> GetGpr_Gasto_Diario(int id)
-        {
-            Gpr_Gasto_Diario gpr_Gasto_Diario = await db.Gpr_Gasto_Diario.FindAsync(id);
-            if (gpr_Gasto_Diario == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(gpr_Gasto_Diario);
-        }
-
         [HttpGet]
         [Route("api/Gpr_Gasto_Diario/Temporada/{idTemporada}")]
         public IQueryable<Gpr_Gasto_Diario_ConsultaDTO> BuscarGastoDiarioXTemporada(int idTemporada)
@@ -58,44 +39,10 @@ namespace SIGEPROAVI_API.Controllers
             return consulta;
         }
 
-        // PUT: api/Gpr_Gasto_Diario/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutGpr_Gasto_Diario(int id, Gpr_Gasto_Diario gpr_Gasto_Diario)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != gpr_Gasto_Diario.IdGprGastoDiario)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(gpr_Gasto_Diario).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!Gpr_Gasto_DiarioExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Gpr_Gasto_Diario
+        [HttpPost]
+        [Route("api/Gpr_Gasto_Diario")]
         [ResponseType(typeof(Gpr_Gasto_Diario))]
-        public async Task<IHttpActionResult> PostGpr_Gasto_Diario(Gpr_Gasto_Diario gpr_Gasto_Diario)
+        public async Task<IHttpActionResult> GuardarGastoDiario(Gpr_Gasto_Diario gpr_Gasto_Diario)
         {
             if (!ModelState.IsValid)
             {
@@ -106,36 +53,6 @@ namespace SIGEPROAVI_API.Controllers
             await db.SaveChangesAsync();
 
             return CreatedAtRoute("DefaultApi", new { id = gpr_Gasto_Diario.IdGprGastoDiario }, gpr_Gasto_Diario);
-        }
-
-        // DELETE: api/Gpr_Gasto_Diario/5
-        [ResponseType(typeof(Gpr_Gasto_Diario))]
-        public async Task<IHttpActionResult> DeleteGpr_Gasto_Diario(int id)
-        {
-            Gpr_Gasto_Diario gpr_Gasto_Diario = await db.Gpr_Gasto_Diario.FindAsync(id);
-            if (gpr_Gasto_Diario == null)
-            {
-                return NotFound();
-            }
-
-            db.Gpr_Gasto_Diario.Remove(gpr_Gasto_Diario);
-            await db.SaveChangesAsync();
-
-            return Ok(gpr_Gasto_Diario);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool Gpr_Gasto_DiarioExists(int id)
-        {
-            return db.Gpr_Gasto_Diario.Count(e => e.IdGprGastoDiario == id) > 0;
         }
     }
 }

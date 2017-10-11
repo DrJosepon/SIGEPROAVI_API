@@ -18,12 +18,6 @@ namespace SIGEPROAVI_API.Controllers
     {
         private SIGEPROAVI_APIContext db = new SIGEPROAVI_APIContext();
 
-        // GET: api/Gpr_Temporada
-        public IQueryable<Gpr_Temporada> GetGpr_Temporada()
-        {
-            return db.Gpr_Temporada;
-        }
-
         [HttpGet]
         [Route("api/Gpr_Temporada/Galpon/{idGalpon}")]
         //[ResponseType(typeof(Dom_Componente_ElectronicoConsultaDTO))]
@@ -32,22 +26,10 @@ namespace SIGEPROAVI_API.Controllers
             return db.Gpr_Temporada.Where(X => X.IdGprGalpon == idGalpon);
         }
 
-        // GET: api/Gpr_Temporada/5
-        [ResponseType(typeof(Gpr_Temporada))]
-        public async Task<IHttpActionResult> GetGpr_Temporada(int id)
-        {
-            Gpr_Temporada gpr_Temporada = await db.Gpr_Temporada.FindAsync(id);
-            if (gpr_Temporada == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(gpr_Temporada);
-        }
-
-        // PUT: api/Gpr_Temporada/5
+        [HttpPut]
+        [Route("api/Gpr_Temporada/{id}")]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutGpr_Temporada(int id, Gpr_Temporada_ModificacionDTO gpr_TemporadaM)
+        public async Task<IHttpActionResult> ModificarTemporada(int id, Gpr_Temporada_ModificacionDTO gpr_TemporadaM)
         {
             //var errors = ModelState.Values.SelectMany(v => v.Errors);
 
@@ -85,7 +67,7 @@ namespace SIGEPROAVI_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Gpr_TemporadaExists(id))
+                if (!VerificarTemporada(id))
                 {
                     return NotFound();
                 }
@@ -99,21 +81,9 @@ namespace SIGEPROAVI_API.Controllers
             return Ok(BuscarTemporadaXGalpon(gpr_Temporada.IdGprGalpon));
         }
 
-        // POST: api/Gpr_Temporada
-        //[ResponseType(typeof(Gpr_Temporada))]
-        //public async Task<IHttpActionResult> PostGpr_Temporada(Gpr_Temporada gpr_Temporada)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    db.Gpr_Temporada.Add(gpr_Temporada);
-        //    await db.SaveChangesAsync();
-
-        //    return CreatedAtRoute("DefaultApi", new { id = gpr_Temporada.IdGprTemporada }, gpr_Temporada);
-        //}
-        public async Task<IHttpActionResult> PostGpr_Temporada(Gpr_Temporada_InsercionDTO gpr_TemporadaI)
+        [HttpPost]
+        [Route("api/Gpr_Temporada")]
+        public async Task<IHttpActionResult> GuardarTemporada(Gpr_Temporada_InsercionDTO gpr_TemporadaI)
         {
             List<Gpr_Temporada> temporadasActivas = db.Gpr_Temporada.Where(X => X.IdGprGalpon == gpr_TemporadaI.IdGprGalpon && X.FechaFin == null).ToList();
             Gpr_Galpon galpon = db.Gpr_Galpon.Where(X => X.IdGprGalpon == gpr_TemporadaI.IdGprGalpon).FirstOrDefault();
@@ -157,32 +127,7 @@ namespace SIGEPROAVI_API.Controllers
             //return Ok(GetGpr_Temporada(gpr_Temporada.IdGprTemporada));
         }
 
-        // DELETE: api/Gpr_Temporada/5
-        [ResponseType(typeof(Gpr_Temporada))]
-        public async Task<IHttpActionResult> DeleteGpr_Temporada(int id)
-        {
-            Gpr_Temporada gpr_Temporada = await db.Gpr_Temporada.FindAsync(id);
-            if (gpr_Temporada == null)
-            {
-                return NotFound();
-            }
-
-            db.Gpr_Temporada.Remove(gpr_Temporada);
-            await db.SaveChangesAsync();
-
-            return Ok(gpr_Temporada);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool Gpr_TemporadaExists(int id)
+        private bool VerificarTemporada(int id)
         {
             return db.Gpr_Temporada.Count(e => e.IdGprTemporada == id) > 0;
         }

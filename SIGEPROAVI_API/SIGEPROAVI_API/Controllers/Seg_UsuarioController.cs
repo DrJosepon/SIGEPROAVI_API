@@ -20,12 +20,9 @@ namespace SIGEPROAVI_API.Controllers
     {
         private SIGEPROAVI_APIContext db = new SIGEPROAVI_APIContext();
 
-        // GET: api/Seg_Usuario
-        //public IQueryable<Seg_Usuario> GetSeg_Usuario()
-        //{
-        //    return db.Seg_Usuario;
-        //}
-        public IQueryable<Seg_Usuario_ConsultaDTO> GetSeg_Usuario()
+        [HttpGet]
+        [Route("api/Seg_Usuario")]
+        public IQueryable<Seg_Usuario_ConsultaDTO> ListarUsuario()
         {
             var consulta = from U in db.Seg_Usuario
                            from TU in db.Seg_Tipo_Usuario.Where(TU => TU.IdSegTipoUsuario == U.IdSegTipoUsuario)
@@ -45,19 +42,7 @@ namespace SIGEPROAVI_API.Controllers
             return consulta.OrderByDescending(U => U.Estado);
         }
 
-        // GET: api/Seg_Usuario/5
-        //[ResponseType(typeof(Seg_Usuario))]
-        //public async Task<IHttpActionResult> GetSeg_Usuario(int id)
-        //{
-        //    Seg_Usuario seg_Usuario = await db.Seg_Usuario.FindAsync(id);
-        //    if (seg_Usuario == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(seg_Usuario);
-        //}
-        public IQueryable<Seg_Usuario_ConsultaDTO> GetSeg_Usuario(int id)
+        public IQueryable<Seg_Usuario_ConsultaDTO> BuscarUsuarioXID(int id)
         {
             var consulta = from U in db.Seg_Usuario.Where(U => U.IdSegUsuario == id)
                            from TU in db.Seg_Tipo_Usuario.Where(TU => TU.IdSegTipoUsuario == U.IdSegTipoUsuario)
@@ -77,9 +62,10 @@ namespace SIGEPROAVI_API.Controllers
             return consulta;
         }
 
-        // PUT: api/Seg_Usuario/5
+        [HttpPut]
+        [Route("api/Seg_Usuario/{id}")]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutSeg_Usuario(int id, Seg_Usuario_ModificacionDTO seg_UsuarioM)
+        public async Task<IHttpActionResult> ModificarUsuario(int id, Seg_Usuario_ModificacionDTO seg_UsuarioM)
         {
             //var errors = ModelState.Values.SelectMany(v => v.Errors);
 
@@ -115,7 +101,7 @@ namespace SIGEPROAVI_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Seg_UsuarioExists(id))
+                if (!VerificarUsuario(id))
                 {
                     return NotFound();
                 }
@@ -130,12 +116,11 @@ namespace SIGEPROAVI_API.Controllers
             //Seg_Usuario_ConsultaDTO resultado = GetSeg_Usuario();
 
             //return Ok(db.Seg_Usuario);
-            return Ok(GetSeg_Usuario());
+            return Ok(ListarUsuario());
         }
 
         [HttpPut]
         [Route("api/Seg_Usuario/Desactivar")]
-        //[ResponseType(typeof(Dom_Componente_ElectronicoConsultaDTO))]
         public async Task<IHttpActionResult> DesactivarUsuario(Seg_Usuario_ModificacionDTO seg_UsuarioM)
         {
             if (!ModelState.IsValid)
@@ -156,7 +141,7 @@ namespace SIGEPROAVI_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Seg_UsuarioExists(seg_UsuarioM.IdSegUsuario))
+                if (!VerificarUsuario(seg_UsuarioM.IdSegUsuario))
                 {
                     return NotFound();
                 }
@@ -166,26 +151,13 @@ namespace SIGEPROAVI_API.Controllers
                 }
             }
 
-            return Ok(GetSeg_Usuario());
+            return Ok(ListarUsuario());
         }
 
-        // POST: api/Seg_Usuario
+        [HttpPost]
+        [Route("api/Seg_Usuario")]
         [ResponseType(typeof(Seg_Usuario))]
-        //public async Task<IHttpActionResult> PostSeg_Usuario(Seg_Usuario seg_Usuario)
-        //{
-        //    var errors = ModelState.Values.SelectMany(v => v.Errors);
-
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    db.Seg_Usuario.Add(seg_Usuario);
-        //    await db.SaveChangesAsync();
-
-        //    return CreatedAtRoute("DefaultApi", new { id = seg_Usuario.IdSegUsuario }, seg_Usuario);
-        //}
-        public async Task<IHttpActionResult> PostSeg_Usuario(Seg_Usuario_InsercionDTO seg_UsuarioI)
+        public async Task<IHttpActionResult> GuardarUsuario(Seg_Usuario_InsercionDTO seg_UsuarioI)
         {
             List<Seg_Usuario> usuarios = db.Seg_Usuario.Where(X => X.Estado == true).ToList();
 
@@ -213,35 +185,10 @@ namespace SIGEPROAVI_API.Controllers
             await db.SaveChangesAsync();
 
             //return CreatedAtRoute("DefaultApi", new { id = seg_Usuario.IdSegUsuario }, GetSeg_Usuario(seg_Usuario.IdSegUsuario));
-            return Ok(GetSeg_Usuario(seg_Usuario.IdSegUsuario));
+            return Ok(BuscarUsuarioXID(seg_Usuario.IdSegUsuario));
         }
 
-        // DELETE: api/Seg_Usuario/5
-        [ResponseType(typeof(Seg_Usuario))]
-        public async Task<IHttpActionResult> DeleteSeg_Usuario(int id)
-        {
-            Seg_Usuario seg_Usuario = await db.Seg_Usuario.FindAsync(id);
-            if (seg_Usuario == null)
-            {
-                return NotFound();
-            }
-
-            db.Seg_Usuario.Remove(seg_Usuario);
-            await db.SaveChangesAsync();
-
-            return Ok(seg_Usuario);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool Seg_UsuarioExists(int id)
+        private bool VerificarUsuario(int id)
         {
             return db.Seg_Usuario.Count(e => e.IdSegUsuario == id) > 0;
         }
