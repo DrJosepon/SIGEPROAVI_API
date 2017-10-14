@@ -39,7 +39,7 @@ namespace SIGEPROAVI_API.Controllers
         [HttpPost]
         [Route("api/Gpr_Medicion_Horaria")]
         [ResponseType(typeof(Gpr_Medicion_Horaria))]
-        public async Task<IHttpActionResult> PostGpr_Medicion_Horaria(Gpr_Medicion_Horaria_InsercionDTO gpr_Medicion_HorariaI)
+        public async Task<IHttpActionResult> GuardarMedicionHoraria(Gpr_Medicion_Horaria_InsercionDTO gpr_Medicion_HorariaI)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<Gpr_Medicion_Horaria_InsercionDTO, Gpr_Medicion_Horaria>());
             Gpr_Medicion_Horaria gpr_Medicion_Horaria = Mapper.Map<Gpr_Medicion_Horaria>(gpr_Medicion_HorariaI);
