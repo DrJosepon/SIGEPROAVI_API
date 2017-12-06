@@ -42,15 +42,17 @@ namespace SIGEPROAVI_API.Controllers
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> ModificarServicio(int id, Gpr_Servicio gpr_Servicio)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
-            if (id != gpr_Servicio.IdGprServicio)
-            {
-                return BadRequest();
-            }
+            //if (id != gpr_Servicio.IdGprServicio)
+            //{
+            //    return BadRequest();
+            //}
+            Gpr_Servicio gpr_servicio = await db.Gpr_Servicio.FindAsync(id);
+            gpr_Servicio.FechaModificacion = DateTime.Now;
 
             db.Entry(gpr_Servicio).State = EntityState.Modified;
 

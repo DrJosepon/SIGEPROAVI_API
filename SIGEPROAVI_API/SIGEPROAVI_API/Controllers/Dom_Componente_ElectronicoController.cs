@@ -166,7 +166,7 @@ namespace SIGEPROAVI_API.Controllers
 
             foreach (Dom_Componente_Electronico componente in componentes)
             {
-                if (componente.Topic != dom_Componente_ElectronicoI.Topic)
+                if (componente.Topic == dom_Componente_ElectronicoI.Topic)
                 {
                     return Content(HttpStatusCode.BadRequest, "Ya existe un componente activo con este nombre de componente.");
                 }

@@ -163,7 +163,7 @@ namespace SIGEPROAVI_API.Controllers
 
             foreach (Seg_Usuario usuario in usuarios)
             {
-                if (usuario.Usuario != seg_UsuarioI.Usuario)
+                if (usuario.Usuario == seg_UsuarioI.Usuario)
                 {
                     return Content(HttpStatusCode.BadRequest, "Ya existe un usuario activo con este nombre de usuario.");
                 }
