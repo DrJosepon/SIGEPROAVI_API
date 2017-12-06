@@ -19,7 +19,7 @@ namespace SIGEPROAVI_API.Models
         public int IdDomTipoControlComponenteElectronico { get; set; }
         public int IdDomComponenteElectronico { get; set; }
 
-        public Dom_Tipo_Componente_Electronico Dom_Tipo_Componente_Electronico { get; set; }
+        public Dom_Tipo_Control_Componente_Electronico Dom_Tipo_Control_Componente_Electronico { get; set; }
         public Dom_Componente_Electronico Dom_Componente_Electronico { get; set; }
     }
 }

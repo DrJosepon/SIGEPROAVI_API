@@ -261,6 +261,10 @@
     <Compile Include="Migrations\201708182010053_Initial1.Designer.cs">
       <DependentUpon>201708182010053_Initial1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712060247483_Correccion.cs" />
+    <Compile Include="Migrations\201712060247483_Correccion.Designer.cs">
+      <DependentUpon>201712060247483_Correccion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BaseEntidad.cs" />
     <Compile Include="Models\Dom_Componente_Electronico.cs" />
@@ -348,6 +352,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708182010053_Initial1.resx">
       <DependentUpon>201708182010053_Initial1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712060247483_Correccion.resx">
+      <DependentUpon>201712060247483_Correccion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
